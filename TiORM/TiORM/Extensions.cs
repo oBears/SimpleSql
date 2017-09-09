@@ -16,7 +16,7 @@ namespace TiORM
     public static class Extensions
     {
 
-        public static void SetupCommand(IDbCommand cmd, string sql, object parm = null)
+        private static void SetupCommand(IDbCommand cmd, string sql, object parm = null)
         {
             cmd.CommandText = sql;
             cmd.CommandType = CommandType.Text;
@@ -32,7 +32,8 @@ namespace TiORM
                     //查找DbType
                     if (dbType == null && item.Value != null)
                         dbType = TypeMap.Lookup(item.Value.GetType());
-                    p.DbType = dbType.Value;
+                    if (dbType.HasValue)
+                        p.DbType = dbType.Value;
                     if (item.Size.HasValue)
                         p.Size = item.Size.Value;
                     if (item.Direction.HasValue)
@@ -41,7 +42,7 @@ namespace TiORM
                 }
             }
         }
-        public static DynamicParameters GetParamters(object param)
+        private static DynamicParameters GetParamters(object param)
         {
             if (param is DynamicParameters) return param as DynamicParameters;
             var type = param.GetType();
@@ -49,6 +50,7 @@ namespace TiORM
             {
                 throw new Exception($"{type.Name}不是Class");
             }
+            //TODO 缓存属性信息
             var props = type.GetProperties();
             var dynamicParamters = new DynamicParameters();
             foreach (var p in props)
@@ -57,7 +59,6 @@ namespace TiORM
             }
             return dynamicParamters;
         }
-
         public static int Execute(this IDbConnection conn, string sql, object param = null)
         {
             if (conn.State == ConnectionState.Closed) conn.Open();
@@ -69,10 +70,9 @@ namespace TiORM
         {
             if (conn.State == ConnectionState.Closed) conn.Open();
             var cmd = conn.CreateCommand();
-            SetupCommand(cmd, sql, param); ;
-            return (T)cmd.ExecuteScalar();
+            SetupCommand(cmd, sql, param);
+            return (T)Convert.ChangeType(cmd.ExecuteScalar(), typeof(T), CultureInfo.InvariantCulture);
         }
-
         public static IEnumerable<T> Query<T>(this IDbConnection conn, string sql, object param = null)
         {
             if (conn.State == ConnectionState.Closed) conn.Open();
@@ -82,28 +82,22 @@ namespace TiORM
             var type = typeof(T);
             while (reader.Read() && reader.FieldCount != 0)
             {
-                //TODO 判断T 是否是Class,  用反射创建对象并赋值（Emit优化）
+                //TODO Emit优化反射部分
                 if (type.IsClass)
                 {
-                    //var props = DefaultResolver.ResolveProperties(type);
                     var props = type.GetProperties();
                     var obj = Activator.CreateInstance<T>();
                     foreach (var p in props)
                     {
                         var colName = p.Name;
                         var val = reader[colName];
-                        //var index = reader.GetOrdinal(colName);
-                        //var val = reader.GetInt32(index);
-                        //TODO  这里获取的值
                         p.SetValue(obj, val);
                     }
                     yield return obj;
                 }
-                //TODO 基础类型直接转换
                 yield return (T)Convert.ChangeType(reader[0], type, CultureInfo.InvariantCulture);
             }
         }
-
         public static UpdateBuilder<T> Update<T>(this IDbConnection conn)
         {
             return new UpdateBuilder<T>(conn);

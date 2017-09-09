@@ -90,7 +90,7 @@ namespace TiORM.Query
         {
             return _conn.Query<T>(_sqlBuilder.BasicSQL, GetParameters()).ToList();
         }
-        private Dictionary<string,object> GetParameters()
+        private DynamicParameters GetParameters()
         {
             return _sqlTranslator.Params;
         }

@@ -12,7 +12,7 @@ namespace TiORM
     public class SqlTranslator<T>
     {
         public readonly Type Type = typeof(T);
-        public Dictionary<string, object> Params = new Dictionary<string, object>();
+        public DynamicParameters Params = new DynamicParameters();
         private int _index = 0;
         public string PIndex
         {

@@ -28,7 +28,7 @@ namespace TiORM
         {
             return _sqlTranslator.PIndex;
         }
-        public Dictionary<string,object> GetParamters()
+        public DynamicParameters GetParamters()
         {
             return _sqlTranslator.Params;
         }

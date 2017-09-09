@@ -21,6 +21,7 @@ namespace TiORM
             {
                 Name = name,
                 DbType = dbType,
+                Value=value,
                 Direction = direction
             });
         }
