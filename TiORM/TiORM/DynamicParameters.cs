@@ -7,7 +7,7 @@ namespace TiORM
 {
     public class DynamicParameters
     {
-        private readonly Dictionary<string, ParamInfo> parameters = new Dictionary<string, ParamInfo>();
+        public readonly Dictionary<string, ParamInfo> parameters = new Dictionary<string, ParamInfo>();
         public object this[string name]
         {
             get
@@ -15,15 +15,17 @@ namespace TiORM
                 return parameters[name];
             }
         }
-        public void Add(string name, object value, DbType? dbType, ParameterDirection? direction)
+        public void Add(string name, object value, DbType? dbType=null, ParameterDirection? direction=null)
         {
             parameters.Add(Clean(name), new ParamInfo()
             {
-                ParameterName = name,
-                DbType = dbType.GetValueOrDefault(DbType.String),
-                Direction = direction.GetValueOrDefault(ParameterDirection.Input)
+                Name = name,
+                DbType = dbType,
+                Direction = direction
             });
         }
+
+       
         private static string Clean(string name)
         {
             if (!string.IsNullOrEmpty(name))

@@ -8,36 +8,68 @@ using TiORM.Query;
 using TiORM.FluentMap.Resolvers;
 using System.Globalization;
 using System.Linq;
+using TiORM.Common;
 
 
 namespace TiORM
 {
     public static class Extensions
     {
-        private static DynamicParameters GetParamter(object param)
+
+        public static void SetupCommand(IDbCommand cmd, string sql, object parm = null)
         {
-            return new DynamicParameters();
+            cmd.CommandText = sql;
+            cmd.CommandType = CommandType.Text;
+            if (parm != null)
+            {
+                var paramters = GetParamters(parm).parameters;
+                foreach (var item in paramters.Values)
+                {
+                    var p = cmd.CreateParameter();
+                    p.ParameterName = item.Name;
+                    p.Value = item.Value;
+                    var dbType = item.DbType;
+                    //查找DbType
+                    if (dbType == null && item.Value != null)
+                        dbType = TypeMap.Lookup(item.Value.GetType());
+                    p.DbType = dbType.Value;
+                    if (item.Size.HasValue)
+                        p.Size = item.Size.Value;
+                    if (item.Direction.HasValue)
+                        p.Direction = item.Direction.Value;
+                    cmd.Parameters.Add(p);
+                }
+            }
+        }
+        public static DynamicParameters GetParamters(object param)
+        {
+            if (param is DynamicParameters) return param as DynamicParameters;
+            var type = param.GetType();
+            if (!type.IsClass)
+            {
+                throw new Exception($"{type.Name}不是Class");
+            }
+            var props = type.GetProperties();
+            var dynamicParamters = new DynamicParameters();
+            foreach (var p in props)
+            {
+                dynamicParamters.Add(p.Name, p.GetValue(param));
+            }
+            return dynamicParamters;
         }
 
         public static int Execute(this IDbConnection conn, string sql, object param = null)
         {
             if (conn.State == ConnectionState.Closed) conn.Open();
             var cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 20;
-         
-            //cmd.Parameters = 
+            SetupCommand(cmd, sql, param); ;
             return cmd.ExecuteNonQuery();
         }
         public static T ExecuteScalar<T>(this IDbConnection conn, string sql, object param = null)
         {
             if (conn.State == ConnectionState.Closed) conn.Open();
             var cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 20;
-            //cmd.Parameters = param;
+            SetupCommand(cmd, sql, param); ;
             return (T)cmd.ExecuteScalar();
         }
 
@@ -45,10 +77,7 @@ namespace TiORM
         {
             if (conn.State == ConnectionState.Closed) conn.Open();
             var cmd = conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 20;
-            //cmd.Parameters = param;
+            SetupCommand(cmd, sql, param); ;
             var reader = cmd.ExecuteReader();
             var type = typeof(T);
             while (reader.Read() && reader.FieldCount != 0)
