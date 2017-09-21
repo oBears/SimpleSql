@@ -26,7 +26,7 @@ namespace TiORM
         }
         public string GetNewParamter()
         {
-            return _sqlTranslator.PIndex;
+            return _sqlTranslator.ParamIndex;
         }
         public DynamicParameters GetParamters()
         {

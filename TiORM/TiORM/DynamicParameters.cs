@@ -25,8 +25,6 @@ namespace TiORM
                 Direction = direction
             });
         }
-
-       
         private static string Clean(string name)
         {
             if (!string.IsNullOrEmpty(name))

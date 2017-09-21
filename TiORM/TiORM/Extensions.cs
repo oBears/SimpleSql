@@ -15,7 +15,6 @@ namespace TiORM
 {
     public static class Extensions
     {
-
         private static void SetupCommand(IDbCommand cmd, string sql, object parm = null)
         {
             cmd.CommandText = sql;
@@ -113,10 +112,6 @@ namespace TiORM
         public static QueryOver<T> CreateQuery<T>(this IDbConnection conn)
         {
             return new QueryOver<T>(conn);
-        }
-        public static SQLQuery<T> CreateSQL<T>(this IDbConnection conn, string sql)
-        {
-            return new SQLQuery<T>(conn, sql);
         }
 
     }

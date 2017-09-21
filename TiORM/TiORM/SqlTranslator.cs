@@ -14,7 +14,7 @@ namespace TiORM
         public readonly Type Type = typeof(T);
         public DynamicParameters Params = new DynamicParameters();
         private int _index = 0;
-        public string PIndex
+        public string ParamIndex
         {
             get { return $"@p{_index++}"; }
         }
@@ -46,7 +46,6 @@ namespace TiORM
                     throw new NotImplementedException($"不支持类型{expression.NodeType.ToString()}");
             }
         }
-
         public string VisitBinary(BinaryExpression expression)
         {
             //节点类型是字段或属性
@@ -78,13 +77,12 @@ namespace TiORM
                 }
                 var fKey = VisitExpression(expression.Left);
                 var fVal = ExpressionHelper.GetExpressValue(expression.Right);
-                var p = PIndex;
+                var p = ParamIndex;
                 Params.Add(p, fVal);
                 return $" {fKey}{op}{p}";
             }
             return string.Empty;
         }
-
         public string VisitMemberAccess(MemberExpression expression)
         {
             return DefaultResolver.ResolveColumnName((PropertyInfo)expression.Member);
@@ -93,11 +91,6 @@ namespace TiORM
         {
             return VisitExpression(expression.Operand);
         }
-
-        /// <summary>
-        /// 处理调用方法 如 Contains
-        /// </summary>
-        /// <param name="expression"></param>
         public string VisitMethodCall(MethodCallExpression expression)
         {
             var methodName = expression.Method.Name;
@@ -109,7 +102,7 @@ namespace TiORM
                         var fKey = VisitMemberAccess((MemberExpression)args[0]);
                         var fval = ExpressionHelper.GetExpressValue(args[1]);
                         var mode = (MatchMode)ExpressionHelper.GetExpressValue(args[2]);
-                        var p = PIndex;
+                        var p = ParamIndex;
                         switch (mode)
                         {
                             case MatchMode.Any:
@@ -135,7 +128,7 @@ namespace TiORM
                             var inParams = new StringBuilder();
                             foreach (var item in fval)
                             {
-                                var p = PIndex;
+                                var p = ParamIndex;
                                 Params.Add(p, fval);
                                 inParams.Append($"@{p},");
                             }
@@ -152,7 +145,7 @@ namespace TiORM
                             var inParams = new StringBuilder();
                             foreach (var item in fval)
                             {
-                                var p = PIndex;
+                                var p = ParamIndex;
                                 Params.Add(p, fval);
                                 inParams.Append($"@{p},");
                             }
@@ -164,7 +157,6 @@ namespace TiORM
                     throw new NotImplementedException($"不支持方法{methodName}");
             }
         }
-
         public string VisitAndOr(BinaryExpression andOr)
         {
             var op = andOr.NodeType == ExpressionType.AndAlso ? " AND " : " OR ";
@@ -174,7 +166,6 @@ namespace TiORM
             var rightSql = VisitExpression(andOr.Right);
             return $"({leftSql} {op} {rightSql})";
         }
-
         public string VisitNew(NewExpression expression)
         {
             StringBuilder builder = new StringBuilder();
