@@ -35,9 +35,4 @@ namespace SimpleSql.Common
             throw new Exception("未找到对应的类型");
         }
     }
-    public enum Lifetime
-    {
-        Transient,
-        Singleton
-    }
 }
