@@ -32,7 +32,7 @@ namespace SimpleSql.Test.Model
             Map(x => x.Age).Column("Age");
             Map(x => x.Birth).Column("Birth");
             Map(x => x.ClassId).Column("ClassId");
-            HasOne(x => x.ClassRoom).Table("ClassRoom").Column("ClassId");
+          
         }
     }
 }

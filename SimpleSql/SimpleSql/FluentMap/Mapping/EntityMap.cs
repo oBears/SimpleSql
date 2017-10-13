@@ -11,7 +11,6 @@ namespace SimpleSql.FluentMap.Mapping
     {
         public string TableName { get; private set; }
         public List<PropertyMap> PropertyMaps { set; get; } = new List<PropertyMap>();
-        public List<ReferenceMap> ReferenceMaps { set; get; } = new List<ReferenceMap>();
 
         public PropertyMap Map<TValue>(Expression<Func<T, TValue>> expression)
         {
@@ -30,21 +29,10 @@ namespace SimpleSql.FluentMap.Mapping
         {
             TableName = name;
         }
-
-        public ReferenceMap HasOne(Expression<Func<T, object>> expression)
-        {
-            var p = (PropertyInfo)ExpressionHelper.GetMemberInfo(expression);
-            var rMap = new ReferenceMap(p);
-            //TODO 判断是否重复添加
-            ReferenceMaps.Add(rMap);
-            return rMap;
-        }
-
     }
     public interface IEntityMap
     {
          string TableName { get; }
          List<PropertyMap> PropertyMaps { get; }
-         List<ReferenceMap> ReferenceMaps {  get; }
     }
 }

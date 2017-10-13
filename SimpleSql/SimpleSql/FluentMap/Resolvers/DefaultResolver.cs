@@ -78,5 +78,11 @@ namespace SimpleSql.FluentMap.Resolvers
             }
             return entityMap;
         }
+
+        public static IEnumerable<PropertyMap> ResolveColumns(Type type)
+        {
+            var entityMap = GetEntityMap(type);
+            return entityMap.PropertyMaps;
+        }
     }
 }
