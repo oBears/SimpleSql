@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSql", "TiORM\SimpleSql.csproj", "{B79CECD9-76F5-43E4-B985-B18A609C3349}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSql", "SimpleSql\SimpleSql.csproj", "{B79CECD9-76F5-43E4-B985-B18A609C3349}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSql.MySql", "TiORM.MySql\SimpleSql.MySql.csproj", "{0574E84C-3260-4348-811B-FD90C67BFC57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSql.MySql", "SimpleSql.MySql\SimpleSql.MySql.csproj", "{0574E84C-3260-4348-811B-FD90C67BFC57}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5C4CCE05-55FB-45B2-A781-D88039AE9500}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{46442A93-DC9F-4F2E-BA26-B6DB46B1E650}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSqlTest", "TiORM.Test\SimpleSqlTest.csproj", "{43E5E48C-6D93-4155-9338-4856F66F3F30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleSqlTest", "SimpleSql.Test\SimpleSqlTest.csproj", "{43E5E48C-6D93-4155-9338-4856F66F3F30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
