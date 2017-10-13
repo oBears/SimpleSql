@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace TiORM.FluentMap.Mapping
+namespace SimpleSql.FluentMap.Mapping
 {
     public static class MapConfig
     {

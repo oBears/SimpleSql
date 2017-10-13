@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TiORM.Query
+namespace SimpleSql.Query
 {
     public static class SqlFunctions
     {

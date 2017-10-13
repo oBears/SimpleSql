@@ -4,7 +4,7 @@ using System.Text;
 using System.Data.Common;
 using System.Data;
 
-namespace TiORM
+namespace SimpleSql
 {
     public class ParamInfo
     {

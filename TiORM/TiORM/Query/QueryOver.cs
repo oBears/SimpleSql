@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
-using TiORM.FluentMap.Resolvers;
-using TiORM;
+using SimpleSql.FluentMap.Resolvers;
+using SimpleSql;
 using System.Linq;
-namespace TiORM.Query
+namespace SimpleSql.Query
 {
     public class QueryOver<T>
     {

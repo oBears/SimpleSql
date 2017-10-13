@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TiORM.FluentMap.Mapping;
+using SimpleSql.FluentMap.Mapping;
 
-namespace TiORM.Test.Model
+namespace SimpleSql.Test.Model
 {
     public class ClassRoom
     {

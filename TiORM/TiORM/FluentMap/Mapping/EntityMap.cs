@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq.Expressions;
 using System.Reflection;
-using TiORM.Common;
+using SimpleSql.Common;
 
-namespace TiORM.FluentMap.Mapping
+namespace SimpleSql.FluentMap.Mapping
 {
     public class EntityMap<T>: IEntityMap
     {

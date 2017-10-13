@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using TiORM.Query;
-using TiORM.FluentMap.Resolvers;
+using SimpleSql.Query;
+using SimpleSql.FluentMap.Resolvers;
 using System.Reflection;
-using TiORM.Common;
+using SimpleSql.Common;
 
-namespace TiORM
+namespace SimpleSql
 {
     public class SqlTranslator<T>
     {

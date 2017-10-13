@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using System.Data;
-using TiORM.FluentMap.Resolvers;
+using SimpleSql.FluentMap.Resolvers;
 
-namespace TiORM
+namespace SimpleSql
 {
     public class BaseBuilder<T>
     {

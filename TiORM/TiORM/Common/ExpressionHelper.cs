@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Linq;
 
 
-namespace TiORM.Common
+namespace SimpleSql.Common
 {
     public static class ExpressionHelper
     {

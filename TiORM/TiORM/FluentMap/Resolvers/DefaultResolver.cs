@@ -1,11 +1,11 @@
-﻿using TiORM.FluentMap.Mapping;
+﻿using SimpleSql.FluentMap.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace TiORM.FluentMap.Resolvers
+namespace SimpleSql.FluentMap.Resolvers
 {
     public static class DefaultResolver
     {

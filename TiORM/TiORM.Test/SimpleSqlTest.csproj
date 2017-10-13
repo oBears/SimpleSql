@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TiORM\TiORM.csproj" />
+    <ProjectReference Include="..\TiORM\SimpleSql.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using TiORM.FluentMap.Resolvers;
+using SimpleSql.FluentMap.Resolvers;
 
 
-namespace TiORM
+namespace SimpleSql
 {
     public class InsertBuilder<T> : BaseBuilder<T>
     {

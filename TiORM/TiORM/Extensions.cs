@@ -4,14 +4,14 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
-using TiORM.Query;
-using TiORM.FluentMap.Resolvers;
+using SimpleSql.Query;
+using SimpleSql.FluentMap.Resolvers;
 using System.Globalization;
 using System.Linq;
-using TiORM.Common;
+using SimpleSql.Common;
 
 
-namespace TiORM
+namespace SimpleSql
 {
     public static class Extensions
     {

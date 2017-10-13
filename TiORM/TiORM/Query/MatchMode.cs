@@ -1,4 +1,4 @@
-﻿namespace TiORM.Query
+﻿namespace SimpleSql.Query
 {
     public enum MatchMode
     {

@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using TiORM;
-using TiORM.FluentMap.Mapping;
-using TiORM.Test.Model;
+using SimpleSql;
+using SimpleSql.FluentMap.Mapping;
+using SimpleSql.Test.Model;
 using Xunit;
 
-namespace TiORM.Test
+namespace SimpleSql.Test
 {
     public class CRUDTest
     {
