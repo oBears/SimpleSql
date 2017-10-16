@@ -6,5 +6,5 @@ solution: ./SimpleSql/SimpleSql.sln
 before_install:
   - dotnet --version
 script:
-  - dotnet restore
-  - dotnet pack -c Release
+  - dotnet restore ./SimpleSql/SimpleSql/SimpleSql.csproj
+  - dotnet pack ./SimpleSql/SimpleSql/SimpleSql.csproj -c Release
