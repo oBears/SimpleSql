@@ -1,0 +1,6 @@
+language: csharp
+before_install:
+  - dotnet --version
+script:
+  - dotnet restore
+  - dotnet pack -c Release
