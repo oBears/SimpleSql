@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using SimpleSql.FluentMap.Resolvers;
 using SimpleSql;
 using System.Linq;
+using SimpleSql.Abstract;
+
 namespace SimpleSql.Query
 {
     public class QueryOver<T>

@@ -9,80 +9,69 @@ namespace SimpleSql.FluentMap.Resolvers
 {
     public static class DefaultResolver
     {
-        public static string ResolveTableName(Type type)
-        {
-            var entityMap = GetEntityMap(type);
-            return entityMap.TableName;
-        }
+        public static string ResolveTableName(Type type) => GetEntityMap(type).TableName;
         public static IEnumerable<PropertyInfo> ResolveProperties(Type type, bool filterIdentity = false)
         {
-            var entityMap = GetEntityMap(type);
-            foreach (var propertyMap in entityMap.PropertyMaps)
+            foreach (var dbColumn in GetEntityMap(type).DbColumns)
             {
-                if (!propertyMap.Ignored && (!filterIdentity || !propertyMap.Identity))
+                if (!dbColumn.Ignored && (!filterIdentity || !dbColumn.Identity))
                 {
-                    yield return propertyMap.PropertyInfo;
+                    yield return dbColumn.PropertyInfo;
                 }
             }
         }
         public static PropertyInfo ResolveKeyProperty(Type type, out bool isIdentity)
         {
-            var entityMap = GetEntityMap(type);
-            var propertyMap = entityMap.PropertyMaps.FirstOrDefault(p => p.Key);
-            isIdentity = propertyMap.Identity;
-            return propertyMap.PropertyInfo;
+            var dbColumn = GetEntityMap(type).DbColumns.FirstOrDefault(p => p.Key);
+            isIdentity = dbColumn.Identity;
+            return dbColumn.PropertyInfo;
 
         }
         public static string ResolveColumnName(PropertyInfo propertyInfo)
         {
             if (propertyInfo.DeclaringType != null)
             {
-                var entityMap = GetEntityMap(propertyInfo.DeclaringType);
-                var propertyMap = entityMap.PropertyMaps.FirstOrDefault(m => m.PropertyInfo.Name == propertyInfo.Name);
-                return propertyMap.ColumnName;
+                var dbColumn = GetEntityMap(propertyInfo.DeclaringType).DbColumns.FirstOrDefault(m => m.PropertyInfo.Name == propertyInfo.Name);
+                return dbColumn.ColumnName;
             }
             throw new Exception($"属性{propertyInfo.Name}没有基类");
 
         }
         public static IEnumerable<string> ResolveColumnNames(Type type, IEnumerable<PropertyInfo> propertyInfos)
         {
-            var entityMap = GetEntityMap(type);
             foreach (var property in propertyInfos)
             {
-                var propertyMap = entityMap.PropertyMaps.FirstOrDefault(p => p.PropertyInfo.Name == property.Name);
-                if (propertyMap != null && !propertyMap.Ignored)
+                var dbColumn = GetEntityMap(type).DbColumns.FirstOrDefault(p => p.PropertyInfo.Name == property.Name);
+                if (dbColumn != null && !dbColumn.Ignored)
                 {
-                    yield return propertyMap.ColumnName;
+                    yield return dbColumn.ColumnName;
                 }
             }
 
         }
         public static IEnumerable<string> ResolveColumnNames(Type type, bool filterIdentity = false)
         {
-            var entityMap = GetEntityMap(type);
-            foreach (var propertyMap in entityMap.PropertyMaps)
+            foreach (var dbColumn in GetEntityMap(type).DbColumns)
             {
-                if (!propertyMap.Ignored && (!filterIdentity || !propertyMap.Identity))
+                if (!dbColumn.Ignored && (!filterIdentity || !dbColumn.Identity))
                 {
-                    yield return propertyMap.ColumnName;
+                    yield return dbColumn.ColumnName;
                 }
             }
         }
 
         public static IEntityMap GetEntityMap(Type type)
         {
-            IEntityMap entityMap;
-            if (!MapConfig.EntityMaps.TryGetValue(type, out entityMap))
+            if (!SimpleSqlConfig.EntityMaps.TryGetValue(type, out IEntityMap entityMap))
             {
                 throw new Exception($"没有注册配置类{type.Name}");
             }
             return entityMap;
         }
 
-        public static IEnumerable<PropertyMap> ResolveColumns(Type type)
+        public static IEnumerable<DbColumn> ResolveColumns(Type type)
         {
-            var entityMap = GetEntityMap(type);
-            return entityMap.PropertyMaps;
+            return GetEntityMap(type).DbColumns;
         }
     }
 }

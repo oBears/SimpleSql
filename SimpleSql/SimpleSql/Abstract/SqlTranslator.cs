@@ -5,9 +5,9 @@ using System.Text;
 using SimpleSql.Query;
 using SimpleSql.FluentMap.Resolvers;
 using System.Reflection;
-using SimpleSql.Common;
+using SimpleSql.Infrastructure;
 
-namespace SimpleSql
+namespace SimpleSql.Abstract
 {
     public class SqlTranslator<T>
     {

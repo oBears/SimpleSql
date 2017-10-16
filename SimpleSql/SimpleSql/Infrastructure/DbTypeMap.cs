@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace SimpleSql.Common
+namespace SimpleSql.Infrastructure
 {
-    public static class TypeMap
+    public static class DbTypeMap
     {
         private static Dictionary<Type, DbType> Maps = new Dictionary<Type, DbType>
         {
@@ -51,8 +51,7 @@ namespace SimpleSql.Common
 
         public static DbType? Lookup(Type type)
         {
-            DbType dbtype;
-            if (Maps.TryGetValue(type,out dbtype))
+            if (Maps.TryGetValue(type, out DbType dbtype))
             {
                 return dbtype;
             }

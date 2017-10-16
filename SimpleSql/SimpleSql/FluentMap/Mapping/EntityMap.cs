@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq.Expressions;
 using System.Reflection;
-using SimpleSql.Common;
+using SimpleSql.Infrastructure;
 
 namespace SimpleSql.FluentMap.Mapping
 {
     public class EntityMap<T>: IEntityMap
     {
         public string TableName { get; private set; }
-        public List<PropertyMap> PropertyMaps { set; get; } = new List<PropertyMap>();
-
-        public PropertyMap Map<TValue>(Expression<Func<T, TValue>> expression)
+        public List<DbColumn> DbColumns { set; get; } = new List<DbColumn>();
+        public DbColumn Map<TValue>(Expression<Func<T, TValue>> expression)
         {
             var p = (PropertyInfo)ExpressionHelper.GetMemberInfo(expression);
-            var pMap = new PropertyMap(p);
+            var pMap = new DbColumn(p);
             //TODO 判断是否重复添加
-            PropertyMaps.Add(pMap);
+            DbColumns.Add(pMap);
             return pMap;
         }
 
-        public PropertyMap Id<TValue>(Expression<Func<T, TValue>> expression)
+        public DbColumn Id<TValue>(Expression<Func<T, TValue>> expression)
         {
             return Map(expression).Column("Id").IsKey().IsIdentity();
         }
@@ -29,10 +28,5 @@ namespace SimpleSql.FluentMap.Mapping
         {
             TableName = name;
         }
-    }
-    public interface IEntityMap
-    {
-         string TableName { get; }
-         List<PropertyMap> PropertyMaps { get; }
     }
 }

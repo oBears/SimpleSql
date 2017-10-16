@@ -5,7 +5,7 @@ using System.Data;
 using SimpleSql.FluentMap.Resolvers;
 
 
-namespace SimpleSql
+namespace SimpleSql.Abstract
 {
     public class InsertBuilder<T> : BaseBuilder<T>
     {

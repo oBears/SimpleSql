@@ -2,34 +2,23 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using SimpleSql.Infrastructure;
 
 namespace SimpleSql.FluentMap.Mapping
 {
-    public class PropertyMap
+    public class DbColumn
     {
-        public PropertyMap(PropertyInfo propertyInfo)
+        public DbColumn(PropertyInfo propertyInfo)
         {
             PropertyInfo = propertyInfo;
-            var columnType = propertyInfo.PropertyType;
-            if (columnType.IsGenericTypeDefinition && columnType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                Nullable = true;
-                columnType = columnType.GetGenericArguments()[0];
-            }
-            if (columnType== typeof(Int32))
-            {
-                Type = "int";
-            }
-            if (columnType == typeof(String))
-            {
-                Type = "varchar";
-            }
-            if (columnType == typeof(String))
-            {
-                Type = "varchar";
-            }
-            //TODO 根据属性类型 
-
+            //var columnType = propertyInfo.PropertyType;
+            //if (columnType.IsGenericTypeDefinition && columnType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            //{
+            //    Nullable = true;
+            //    columnType = columnType.GetGenericArguments()[0];
+            //}
+            //var dbConvert = ServiceLooker.GetService<DbTypeConverter>();
+            //Type = dbConvert.Convert(columnType);
         }
         public string ColumnName { get; private set; }
 
@@ -59,38 +48,38 @@ namespace SimpleSql.FluentMap.Mapping
         public string Type { set; get; }
         public PropertyInfo PropertyInfo { get; private set; }
 
-        public PropertyMap Column(string name)
+        public DbColumn Column(string name)
         {
             ColumnName = name;
             return this;
         }
-        public PropertyMap Ignore()
+        public DbColumn Ignore()
         {
             Ignored = true;
             return this;
         }
-        public PropertyMap IsKey()
+        public DbColumn IsKey()
         {
             Key = true;
             return this;
         }
-        public PropertyMap IsIdentity()
+        public DbColumn IsIdentity()
         {
             Identity = true;
             return this;
         }
 
-        public PropertyMap DataType(string type)
+        public DbColumn DataType(string type)
         {
             Type = type;
             return this;
         }
-        public PropertyMap IsNullable()
+        public DbColumn IsNullable()
         {
             Nullable = true;
             return this;
         }
-        public PropertyMap Length(int size)
+        public DbColumn Length(int size)
         {
             Size = size;
             return this;

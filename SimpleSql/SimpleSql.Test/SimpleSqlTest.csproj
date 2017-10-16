@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleSql.MySql\SimpleSql.MySql.csproj" />
     <ProjectReference Include="..\SimpleSql\SimpleSql.csproj" />
   </ItemGroup>
 

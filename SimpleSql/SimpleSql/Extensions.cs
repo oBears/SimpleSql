@@ -8,7 +8,8 @@ using SimpleSql.Query;
 using SimpleSql.FluentMap.Resolvers;
 using System.Globalization;
 using System.Linq;
-using SimpleSql.Common;
+using SimpleSql.Infrastructure;
+using SimpleSql.Abstract;
 
 
 namespace SimpleSql
@@ -30,7 +31,7 @@ namespace SimpleSql
                     var dbType = item.DbType;
                     //查找DbType
                     if (dbType == null && item.Value != null)
-                        dbType = TypeMap.Lookup(item.Value.GetType());
+                        dbType = DbTypeMap.Lookup(item.Value.GetType());
                     if (dbType.HasValue)
                         p.DbType = dbType.Value;
                     if (item.Size.HasValue)

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Data;
 using SimpleSql.FluentMap.Resolvers;
 
-namespace SimpleSql
+namespace SimpleSql.Abstract
 {
     public class UpdateBuilder<T> : BaseBuilder<T>
     {

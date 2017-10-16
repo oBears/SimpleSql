@@ -16,8 +16,8 @@ namespace SimpleSql.Test
 
         public CRUDTest()
         {
-            MapConfig.AddMap(new StudentMap());
-            MapConfig.AddMap(new ClassRoomMap());
+            SimpleSqlConfig.AddMap(new StudentMap());
+            SimpleSqlConfig.AddMap(new ClassRoomMap());
         }
 
         private IDbConnection GetConn()
