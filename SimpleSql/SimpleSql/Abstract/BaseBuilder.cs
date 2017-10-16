@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using System.Data;
-using SimpleSql.FluentMap.Resolvers;
+using SimpleSql.Entity;
 
 namespace SimpleSql.Abstract
 {

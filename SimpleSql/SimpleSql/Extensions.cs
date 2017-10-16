@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
 using SimpleSql.Query;
-using SimpleSql.FluentMap.Resolvers;
+using SimpleSql.Entity;
 using System.Globalization;
 using System.Linq;
 using SimpleSql.Infrastructure;

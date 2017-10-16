@@ -1,12 +1,14 @@
-﻿using System;
+﻿using SimpleSql.Entity;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using SimpleSql.FluentMap.Mapping;
+
 
 namespace SimpleSql.Test.Model
 {
     public class Student
     {
+        [SqlColumn(Increment = true, Key = true)]
         public int Id { set; get; }
         public string Name { set; get; }
         public Gender Gender { set; get; }
@@ -21,18 +23,5 @@ namespace SimpleSql.Test.Model
         男,
         女
     }
-    public class StudentMap:EntityMap<Student>
-    {
-        public StudentMap()
-        {
-            Table("Student");
-            Id(x => x.Id).Column("Id");
-            Map(x => x.Name).Column("Name");
-            Map(x => x.Gender).Column("Gender");
-            Map(x => x.Age).Column("Age");
-            Map(x => x.Birth).Column("Birth");
-            Map(x => x.ClassId).Column("ClassId");
-          
-        }
-    }
+
 }

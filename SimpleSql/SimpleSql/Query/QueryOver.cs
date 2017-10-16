@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
-using SimpleSql.FluentMap.Resolvers;
+using SimpleSql.Entity;
 using SimpleSql;
 using System.Linq;
 using SimpleSql.Abstract;

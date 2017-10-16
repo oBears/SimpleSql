@@ -1,11 +1,11 @@
-﻿using SimpleSql.FluentMap.Mapping;
+﻿using SimpleSql.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace SimpleSql.FluentMap.Resolvers
+namespace SimpleSql.Entity
 {
     public static class DefaultResolver
     {
@@ -14,16 +14,16 @@ namespace SimpleSql.FluentMap.Resolvers
         {
             foreach (var dbColumn in GetEntityMap(type).DbColumns)
             {
-                if (!dbColumn.Ignored && (!filterIdentity || !dbColumn.Identity))
+                if (!filterIdentity || !dbColumn.Increment)
                 {
                     yield return dbColumn.PropertyInfo;
                 }
             }
         }
-        public static PropertyInfo ResolveKeyProperty(Type type, out bool isIdentity)
+        public static PropertyInfo ResolveKeyProperty(Type type, out bool isIncrement)
         {
             var dbColumn = GetEntityMap(type).DbColumns.FirstOrDefault(p => p.Key);
-            isIdentity = dbColumn.Identity;
+            isIncrement = dbColumn.Increment;
             return dbColumn.PropertyInfo;
 
         }
@@ -42,10 +42,8 @@ namespace SimpleSql.FluentMap.Resolvers
             foreach (var property in propertyInfos)
             {
                 var dbColumn = GetEntityMap(type).DbColumns.FirstOrDefault(p => p.PropertyInfo.Name == property.Name);
-                if (dbColumn != null && !dbColumn.Ignored)
-                {
+                if (dbColumn != null)
                     yield return dbColumn.ColumnName;
-                }
             }
 
         }
@@ -53,18 +51,17 @@ namespace SimpleSql.FluentMap.Resolvers
         {
             foreach (var dbColumn in GetEntityMap(type).DbColumns)
             {
-                if (!dbColumn.Ignored && (!filterIdentity || !dbColumn.Identity))
-                {
+                if (!filterIdentity || !dbColumn.Increment)
                     yield return dbColumn.ColumnName;
-                }
             }
         }
 
-        public static IEntityMap GetEntityMap(Type type)
+        public static DbTable GetEntityMap(Type type)
         {
-            if (!SimpleSqlConfig.EntityMaps.TryGetValue(type, out IEntityMap entityMap))
+            if (!Cache.TableMaps.TryGetValue(type, out DbTable entityMap))
             {
-                throw new Exception($"没有注册配置类{type.Name}");
+                entityMap = new DbTable(type);
+                Cache.TableMaps.TryAdd(type, entityMap);
             }
             return entityMap;
         }

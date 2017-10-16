@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using SimpleSql;
-using SimpleSql.FluentMap.Mapping;
 using SimpleSql.Test.Model;
 using Xunit;
 
@@ -16,8 +15,7 @@ namespace SimpleSql.Test
 
         public CRUDTest()
         {
-            SimpleSqlConfig.AddMap(new StudentMap());
-            SimpleSqlConfig.AddMap(new ClassRoomMap());
+
         }
 
         private IDbConnection GetConn()

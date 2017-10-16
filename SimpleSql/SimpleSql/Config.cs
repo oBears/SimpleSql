@@ -1,4 +1,4 @@
-﻿using SimpleSql.FluentMap.Mapping;
+﻿using SimpleSql.Entity;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,14 +8,9 @@ using System.Linq;
 
 namespace SimpleSql
 {
-    public static class SimpleSqlConfig
+    public static class Config
     {
-        public static readonly ConcurrentDictionary<Type, IEntityMap> EntityMaps = new ConcurrentDictionary<Type, IEntityMap>();
-
-        public static void AddMap<TEntity>(EntityMap<TEntity> entityMap)
-        {
-            EntityMaps.TryAdd(typeof(TEntity), entityMap);
-        }
+      
         //TODO 全局配置大小写
         /// <summary>
         /// 区分大小写

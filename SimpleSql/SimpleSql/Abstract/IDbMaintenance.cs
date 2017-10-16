@@ -1,4 +1,4 @@
-﻿using SimpleSql.FluentMap.Mapping;
+﻿using SimpleSql.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;

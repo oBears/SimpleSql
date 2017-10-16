@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using SimpleSql.Query;
-using SimpleSql.FluentMap.Resolvers;
 using System.Reflection;
 using SimpleSql.Infrastructure;
+using SimpleSql.Entity;
 
 namespace SimpleSql.Abstract
 {
