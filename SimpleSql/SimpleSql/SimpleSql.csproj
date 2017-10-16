@@ -11,7 +11,7 @@
     <Copyright>Tibbers</Copyright>
     <PackageId>SimpleSql-Core</PackageId>
     <Version>1.0.2</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
