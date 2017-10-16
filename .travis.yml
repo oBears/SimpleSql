@@ -1,4 +1,8 @@
 language: csharp
+mono: none
+dotnet: 2.0.0
+dist: trusty
+solution: ./SimpleSql/SimpleSql.sln
 before_install:
   - dotnet --version
 script:
