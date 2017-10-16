@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Authors>Tibbers</Authors>
+    <Company />
+    <Product />
+    <Description>Simple dotnet core 2.0 ORM</Description>
+    <RepositoryUrl>https://github.com/oBears/SimpleSql</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/oBears/SimpleSql</PackageProjectUrl>
+    <Copyright>Tibbers</Copyright>
+    <PackageId>SimpleSql-Core</PackageId>
+    <Version>1.0.2</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

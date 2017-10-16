@@ -8,3 +8,4 @@ before_install:
 script:
   - dotnet restore ./SimpleSql/SimpleSql/SimpleSql.csproj
   - dotnet pack ./SimpleSql/SimpleSql/SimpleSql.csproj -c Release
+  - cd ./SimpleSql/SimpleSql/bin/Release/&&dotnet nuget push *.nupkg -k 6845c444-7239-4f21-be69-777dfccad580 -s https://www.nuget.org/api/v2/package
