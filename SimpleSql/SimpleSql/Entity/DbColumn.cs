@@ -20,6 +20,7 @@ namespace SimpleSql.Entity
                 Length = colAttr.Length;
                 Nullable = colAttr.Nullable;
                 DataType = colAttr.DataType;
+
             }
             if (string.IsNullOrEmpty(ColumnName))
                 ColumnName = propertyInfo.Name;

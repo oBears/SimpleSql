@@ -64,7 +64,8 @@ namespace SimpleSql
             if (conn.State == ConnectionState.Closed) conn.Open();
             var cmd = conn.CreateCommand();
             SetupCommand(cmd, sql, param); ;
-            return cmd.ExecuteNonQuery();
+            var res= cmd.ExecuteNonQuery();
+            return res;
         }
         public static T ExecuteScalar<T>(this IDbConnection conn, string sql, object param = null)
         {

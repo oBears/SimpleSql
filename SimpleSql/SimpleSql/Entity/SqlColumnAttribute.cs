@@ -9,10 +9,6 @@ namespace SimpleSql.Entity
     {
         public string ColumnName { get;  set; }
         /// <summary>
-        /// 忽略
-        /// </summary>
-        public bool Ignored { get;  set; }
-        /// <summary>
         /// 主键
         /// </summary>
         public bool Key { get;  set; }

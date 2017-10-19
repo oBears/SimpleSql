@@ -22,7 +22,9 @@ namespace SimpleSql.Entity
                 TableName = type.Name;
             DbColumns = new List<DbColumn>();
             foreach (var p in type.GetProperties())
-                DbColumns.Add(new DbColumn(p));
+                if (p.GetCustomAttribute<SqlIgnoreAttribute>() == null)
+                    DbColumns.Add(new DbColumn(p));
+
         }
     }
 }

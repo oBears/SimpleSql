@@ -15,6 +15,7 @@ namespace SimpleSql.Test.Model
         public int Age { set; get; }
         public DateTime? Birth { set; get; }
         public int ClassId { set; get; }
+        [SqlIgnore]
         public ClassRoom ClassRoom { set; get; }
     }
 
