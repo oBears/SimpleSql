@@ -20,7 +20,6 @@ namespace SimpleSql.Entity
                 Length = colAttr.Length;
                 Nullable = colAttr.Nullable;
                 DataType = colAttr.DataType;
-
             }
             if (string.IsNullOrEmpty(ColumnName))
                 ColumnName = propertyInfo.Name;
@@ -59,6 +58,7 @@ namespace SimpleSql.Entity
         /// 数据类型
         /// </summary>
         public string DataType { set; get; }
+        public string Default { set; get; }
         public PropertyInfo PropertyInfo { get; private set; }
     }
 }

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using System.Data.Common;
-using System.Linq.Expressions;
 using SimpleSql.Query;
-using SimpleSql.Entity;
 using System.Globalization;
-using System.Linq;
 using SimpleSql.Infrastructure;
 using SimpleSql.Abstract;
 
