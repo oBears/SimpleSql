@@ -5,6 +5,7 @@ using SimpleSql.Query;
 using System.Globalization;
 using SimpleSql.Infrastructure;
 using SimpleSql.Abstract;
+using System.Linq;
 
 
 namespace SimpleSql
@@ -59,7 +60,8 @@ namespace SimpleSql
             if (conn.State == ConnectionState.Closed) conn.Open();
             var cmd = conn.CreateCommand();
             SetupCommand(cmd, sql, param); ;
-            var res= cmd.ExecuteNonQuery();
+            var res = cmd.ExecuteNonQuery();
+            if (conn.State == ConnectionState.Open) conn.Close();
             return res;
         }
         public static T ExecuteScalar<T>(this IDbConnection conn, string sql, object param = null)
@@ -67,7 +69,9 @@ namespace SimpleSql
             if (conn.State == ConnectionState.Closed) conn.Open();
             var cmd = conn.CreateCommand();
             SetupCommand(cmd, sql, param);
-            return (T)Convert.ChangeType(cmd.ExecuteScalar(), typeof(T), CultureInfo.InvariantCulture);
+            var res = (T)Convert.ChangeType(cmd.ExecuteScalar(), typeof(T), CultureInfo.InvariantCulture);
+            if (conn.State == ConnectionState.Open) conn.Close();
+            return res;
         }
         public static IEnumerable<T> Query<T>(this IDbConnection conn, string sql, object param = null)
         {
@@ -83,16 +87,27 @@ namespace SimpleSql
                 {
                     var props = type.GetProperties();
                     var obj = Activator.CreateInstance<T>();
-                    foreach (var p in props)
+                    for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        var colName = p.Name;
-                        var val = reader[colName];
-                        p.SetValue(obj, val);
+                        var colName = reader.GetName(i).ToLower();
+                        var p = props.FirstOrDefault(x => x.Name.ToLower() == colName);
+                        if (p != null)
+                        {
+                            var val = reader.GetValue(i);
+                            if (val is DBNull)
+                                continue;
+                            p.SetValue(obj, val);
+                        }
                     }
                     yield return obj;
                 }
-                yield return (T)Convert.ChangeType(reader[0], type, CultureInfo.InvariantCulture);
+                else
+                {
+                    yield return (T)Convert.ChangeType(reader[0], type, CultureInfo.InvariantCulture);
+                }
+
             }
+            if (conn.State == ConnectionState.Open) conn.Close();
         }
         public static UpdateBuilder<T> Update<T>(this IDbConnection conn)
         {

@@ -2,16 +2,42 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 
 namespace SimpleSql.Abstract
 {
     public class Migration
     {
         private readonly IDbConnection conn;
+        public List<DbMetaData> DbMetaDatas { private set; get; }
+        public bool HasSystemTablePermissions { private set; get; }
+        private string database;
+        private string systemDataBase = "mysql";
+        private string connectionStr;
         public Migration(IDbConnection dbConnection)
         {
             conn = dbConnection;
+            database = conn.Database;
+            connectionStr = conn.ConnectionString;
+            try
+            {
+                conn.ConnectionString = conn.ConnectionString.Replace(database, systemDataBase);
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                HasSystemTablePermissions = true;
+            }
+            catch (Exception ex)
+            {
+                HasSystemTablePermissions = false;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
         }
+
         public bool CreateTable(string tableName, List<DbColumn> columns)
         {
             var cols = new List<string>();
@@ -33,68 +59,79 @@ namespace SimpleSql.Abstract
             }
             if (!string.IsNullOrEmpty(keyCol))
                 cols.Add(keyCol);
-            var sql = $"CREATE TABLE {tableName}({string.Join(",", cols)})ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-            conn.Execute(sql);
-            return true;
+            var sql = $"CREATE TABLE {database}.`{tableName}`({string.Join(",", cols)})ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+            return conn.Execute(sql) > 0;
         }
         public bool DropColumn(string tableName, string columnName)
         {
-            var sql = $"alter table `{tableName}` drop column {columnName}";
-            conn.Execute(sql);
-            return true;
+            var sql = $"alter table {database}.`{tableName}` drop column {columnName}";
+            return conn.Execute(sql) > 0;
         }
         public bool DropTable(string tableName)
         {
-            var sql = $"drop table {tableName}";
-            throw new NotImplementedException();
+            var sql = $"drop table {database}.{tableName}";
+            return conn.Execute(sql) > 0;
         }
         public bool ExistsColumn(string tableName, string columnName)
         {
-            throw new NotImplementedException();
+            return DbMetaDatas.Any(x => x.Database == database && x.TableName == tableName && x.ColumnName == columnName);
         }
         public bool ExistsTable(string tableName)
         {
-            throw new NotImplementedException();
+            return DbMetaDatas.Any(x => x.Database == database && x.TableName == tableName);
         }
+        public bool ExistsDatabase()
+        {
+            return DbMetaDatas.Any(x => x.Database == database);
+        }
+        public bool CreateDatabase()
+        {
+            var sql = $"CREATE DATABASE {database}";
+            return conn.Execute(sql) > 0;
+        }
+
         public bool UpdateColumn(string tableName, DbColumn column)
         {
-            var sql = $"ALTER TABLE {tableName} MODIFY {column.ColumnName} {column.DataType}";
+            var sql = $"ALTER TABLE {database}.{tableName} MODIFY {column.ColumnName} {column.DataType}";
             if (column.Length > 0)
                 sql += $"({column.Length})";
             if (!column.Nullable)
                 sql += " NOT NULL";
             if (!string.IsNullOrEmpty(column.Default))
                 sql += $" DEFAULT '{column.Default}'";
+            return conn.Execute(sql) > 0;
 
-            throw new NotImplementedException();
         }
         public bool AddPrimaryKey(string tableName, string columnName)
         {
-            var sql = $"alter table `{tableName}` add primary key({columnName});";
-            throw new NotImplementedException();
+            var sql = $"alter table {database}.`{tableName}` add primary key({columnName});";
+            return conn.Execute(sql) > 0;
         }
-        public bool HasSystemTablePermissions()
-        {
-            throw new NotImplementedException();
-        }
+
         public bool RenameColumn(string tableName, string oldColumnName, string newColumnName)
         {
             throw new NotImplementedException();
         }
 
-        public void Check()
+        public void InitDatabase()
         {
-            var sql = "SELECT TABLE_NAME,COLUMN_NAME,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='test'";
-
+            var sql = $"SELECT TABLE_SCHEMA `Database`,TABLE_NAME TableName,COLUMN_NAME ColumnName,IS_NULLABLE IsNullable,DATA_TYPE DataType,CHARACTER_MAXIMUM_LENGTH Length, COLUMN_KEY ColumnKey FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='{database}'";
+            DbMetaDatas = conn.Query<DbMetaData>(sql).ToList();
+            if (!ExistsDatabase())
+                CreateDatabase();
+            var tableTypes = Assembly.GetEntryAssembly().GetExportedTypes().Where(t => t.GetCustomAttribute<SqlTableAttribute>() != null);
+            foreach (var tableType in tableTypes)
+            {
+                var dbTable = DefaultResolver.GetDbTable(tableType);
+                if (!ExistsTable(dbTable.TableName))
+                    CreateTable(dbTable.TableName, dbTable.DbColumns);
+            }
+            if (HasSystemTablePermissions)
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+                conn.ConnectionString = connectionStr;
+            }
         }
-    }
-    public class Col
-    {
-        public string TableName { set; get; }
-        public string ColumnName { set; get; }
-        public string IsNullable { set; get; }
-        public string DataType { set; get; }
-        public int Length { set; get; }
-        public bool PrimaryKey { set; get; }
     }
 }

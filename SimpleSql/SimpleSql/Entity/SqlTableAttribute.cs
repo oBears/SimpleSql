@@ -8,6 +8,10 @@ namespace SimpleSql.Entity
     public class SqlTableAttribute : Attribute
     {
         public string TableName { set; get; }
+        public SqlTableAttribute()
+        {
+
+        }
 
         public SqlTableAttribute(string tableName)
         {

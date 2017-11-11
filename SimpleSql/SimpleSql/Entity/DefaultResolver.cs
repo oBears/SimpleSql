@@ -9,10 +9,10 @@ namespace SimpleSql.Entity
 {
     public static class DefaultResolver
     {
-        public static string ResolveTableName(Type type) => GetEntityMap(type).TableName;
+        public static string ResolveTableName(Type type) => GetDbTable(type).TableName;
         public static IEnumerable<PropertyInfo> ResolveProperties(Type type, bool filterIdentity = false)
         {
-            foreach (var dbColumn in GetEntityMap(type).DbColumns)
+            foreach (var dbColumn in GetDbTable(type).DbColumns)
             {
                 if (!filterIdentity || !dbColumn.Increment)
                 {
@@ -22,7 +22,7 @@ namespace SimpleSql.Entity
         }
         public static PropertyInfo ResolveKeyProperty(Type type, out bool isIncrement)
         {
-            var dbColumn = GetEntityMap(type).DbColumns.FirstOrDefault(p => p.Key);
+            var dbColumn = GetDbTable(type).DbColumns.FirstOrDefault(p => p.Key);
             isIncrement = dbColumn.Increment;
             return dbColumn.PropertyInfo;
 
@@ -31,7 +31,7 @@ namespace SimpleSql.Entity
         {
             if (propertyInfo.DeclaringType != null)
             {
-                var dbColumn = GetEntityMap(propertyInfo.DeclaringType).DbColumns.FirstOrDefault(m => m.PropertyInfo.Name == propertyInfo.Name);
+                var dbColumn = GetDbTable(propertyInfo.DeclaringType).DbColumns.FirstOrDefault(m => m.PropertyInfo.Name == propertyInfo.Name);
                 return dbColumn.ColumnName;
             }
             throw new Exception($"属性{propertyInfo.Name}没有基类");
@@ -41,7 +41,7 @@ namespace SimpleSql.Entity
         {
             foreach (var property in propertyInfos)
             {
-                var dbColumn = GetEntityMap(type).DbColumns.FirstOrDefault(p => p.PropertyInfo.Name == property.Name);
+                var dbColumn = GetDbTable(type).DbColumns.FirstOrDefault(p => p.PropertyInfo.Name == property.Name);
                 if (dbColumn != null)
                     yield return dbColumn.ColumnName;
             }
@@ -49,26 +49,26 @@ namespace SimpleSql.Entity
         }
         public static IEnumerable<string> ResolveColumnNames(Type type, bool filterIdentity = false)
         {
-            foreach (var dbColumn in GetEntityMap(type).DbColumns)
+            foreach (var dbColumn in GetDbTable(type).DbColumns)
             {
                 if (!filterIdentity || !dbColumn.Increment)
                     yield return dbColumn.ColumnName;
             }
         }
 
-        public static DbTable GetEntityMap(Type type)
+        public static DbTable GetDbTable(Type type)
         {
-            if (!Cache.TableMaps.TryGetValue(type, out DbTable entityMap))
+            if (!Cache.TableMaps.TryGetValue(type, out DbTable dbtable))
             {
-                entityMap = new DbTable(type);
-                Cache.TableMaps.TryAdd(type, entityMap);
+                dbtable = new DbTable(type);
+                Cache.TableMaps.TryAdd(type, dbtable);
             }
-            return entityMap;
+            return dbtable;
         }
 
         public static IEnumerable<DbColumn> ResolveColumns(Type type)
         {
-            return GetEntityMap(type).DbColumns;
+            return GetDbTable(type).DbColumns;
         }
     }
 }

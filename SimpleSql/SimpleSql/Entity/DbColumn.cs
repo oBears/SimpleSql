@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using SimpleSql.Infrastructure;
+using SimpleSql.Abstract;
 
 namespace SimpleSql.Entity
 {
@@ -25,15 +26,16 @@ namespace SimpleSql.Entity
                 ColumnName = propertyInfo.Name;
             if (string.IsNullOrEmpty(DataType))
             {
-                //GET DataType
-                //var columnType = propertyInfo.PropertyType;
-                //if (columnType.IsGenericTypeDefinition && columnType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                //{
-                //    Nullable = true;
-                //    columnType = columnType.GetGenericArguments()[0];
-                //}
-                //var dbConvert = ServiceLooker.GetService<DbTypeConverter>();
-                //Type = dbConvert.Convert(columnType);
+                var columnType = propertyInfo.PropertyType;
+                if (columnType.IsGenericTypeDefinition && columnType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    Nullable = true;
+                    columnType = columnType.GetGenericArguments()[0];
+                }
+                var p = DbTypeConverter.Lookup(columnType);
+                DataType = p.Key;
+                if (Length == 0)
+                    Length = p.Value;
             }
         }
         public string ColumnName { get; set; }

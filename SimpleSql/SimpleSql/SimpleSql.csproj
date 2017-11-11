@@ -15,7 +15,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Realization\Mysql\" />
+    <Compile Remove="Realization\**" />
+    <EmbeddedResource Remove="Realization\**" />
+    <None Remove="Realization\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="MySqlConnector" Version="0.30.0" />
   </ItemGroup>
 
 </Project>
