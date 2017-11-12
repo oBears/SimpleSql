@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/oBears/SimpleSql</PackageProjectUrl>
     <Copyright>Tibbers</Copyright>
     <PackageId>SimpleSql-Core</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
