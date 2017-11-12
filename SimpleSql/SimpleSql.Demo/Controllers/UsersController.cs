@@ -22,7 +22,7 @@ namespace SimpleSql.Demo.Controllers
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            return conn.CreateQuery<User>().Where(x => x.Id == id).ToList().FirstOrDefault();
+            return conn.CreateQuery<User>().FirstOrDefault(x => x.Id == id);
         }
         [HttpPost]
         public void Create(User user)

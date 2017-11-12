@@ -92,6 +92,11 @@ namespace SimpleSql.Query
         {
             return _conn.Query<T>(_sqlBuilder.BasicSQL, GetParameters()).ToList();
         }
+        public T FirstOrDefault(Expression<Func<T, bool>> expression)
+        {
+            return this.Where(expression).Take(1).ToList().FirstOrDefault();
+        }
+
         private DynamicParameters GetParameters()
         {
             return _sqlTranslator.Params;

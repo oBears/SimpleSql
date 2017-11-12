@@ -9,6 +9,7 @@ namespace SimpleSql.Abstract
 {
     public class Migration
     {
+        public static bool Inited { set; get; }
         private readonly IDbConnection conn;
         public List<DbMetaData> DbMetaDatas { private set; get; }
         public bool HasSystemTablePermissions { private set; get; }
@@ -74,15 +75,15 @@ namespace SimpleSql.Abstract
         }
         public bool ExistsColumn(string tableName, string columnName)
         {
-            return DbMetaDatas.Any(x => x.Database == database && x.TableName == tableName && x.ColumnName == columnName);
+            return DbMetaDatas.Any(x => x.Database.ToLower() == database.ToLower() && x.TableName.ToLower() == tableName.ToLower() && x.ColumnName.ToLower() == columnName.ToLower());
         }
         public bool ExistsTable(string tableName)
         {
-            return DbMetaDatas.Any(x => x.Database == database && x.TableName == tableName);
+            return DbMetaDatas.Any(x => x.Database.ToLower() == database.ToLower() && x.TableName.ToLower() == tableName.ToLower());
         }
         public bool ExistsDatabase()
         {
-            return DbMetaDatas.Any(x => x.Database == database);
+            return DbMetaDatas.Any(x => x.Database.ToLower() == database.ToLower());
         }
         public bool CreateDatabase()
         {
@@ -126,12 +127,7 @@ namespace SimpleSql.Abstract
                 if (!ExistsTable(dbTable.TableName))
                     CreateTable(dbTable.TableName, dbTable.DbColumns);
             }
-            if (HasSystemTablePermissions)
-            {
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
-                conn.ConnectionString = connectionStr;
-            }
+            Inited = true;
         }
     }
 }

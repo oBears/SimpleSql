@@ -9,11 +9,9 @@ namespace SimpleSql
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddSimpleSql(this IServiceCollection serviceCollection, Action<SimpleSqlOptions> setup)
+        public static IServiceCollection AddSimpleSql(this IServiceCollection serviceCollection, Func<SimpleSqlOptions,IDbConnection> setup)
         {
-            var opts = new SimpleSqlOptions();
-            setup(opts);
-            return serviceCollection.AddScoped(p => opts.DbConnection);
+            return serviceCollection.AddScoped(p => setup(new SimpleSqlOptions()));
         }
 
     }

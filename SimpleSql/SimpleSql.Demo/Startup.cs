@@ -25,7 +25,7 @@ namespace SimpleSql.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSimpleSql(opts=>opts.UseMysql(Configuration.GetConnectionString("default")).UseMirgation());
+            services.AddSimpleSql(opts =>opts.UseMysql(Configuration.GetConnectionString("default")).UseMirgation().CreateConnection());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
