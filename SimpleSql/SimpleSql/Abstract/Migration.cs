@@ -9,7 +9,6 @@ namespace SimpleSql.Abstract
 {
     public class Migration
     {
-        public static bool Inited { set; get; }
         private readonly IDbConnection conn;
         public List<DbMetaData> DbMetaDatas { private set; get; }
         public bool HasSystemTablePermissions { private set; get; }
@@ -127,7 +126,6 @@ namespace SimpleSql.Abstract
                 if (!ExistsTable(dbTable.TableName))
                     CreateTable(dbTable.TableName, dbTable.DbColumns);
             }
-            Inited = true;
         }
     }
 }

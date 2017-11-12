@@ -36,11 +36,8 @@ namespace SimpleSql
         }
         public SimpleSqlOptions UseMirgation()
         {
-            if (!Migration.Inited)
-            {
-                var m = new Migration(CreateConnection());
-                m.InitDatabase();
-            }
+            var m = new Migration(CreateConnection());
+            m.InitDatabase();
             return this;
         }
 
