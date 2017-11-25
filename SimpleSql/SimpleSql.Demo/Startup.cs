@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 
 namespace SimpleSql.Demo
 {
@@ -18,16 +19,14 @@ namespace SimpleSql.Demo
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSimpleSql(opts =>opts.UseMysql(Configuration.GetConnectionString("default")).UseMirgation());
+            services.AddSimpleSql(opts => opts.UseMysql(Configuration.GetConnectionString("default")).UseMirgation());
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

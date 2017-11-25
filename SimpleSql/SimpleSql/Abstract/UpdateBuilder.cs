@@ -15,6 +15,18 @@ namespace SimpleSql.Abstract
         {
 
         }
+        public UpdateBuilder(IDbConnection conn,T entity) : base(conn)
+        {
+            var properties = DefaultResolver.ResolveProperties(type, false);
+            foreach (var p in properties)
+            {
+                var fieldName = DefaultResolver.ResolveColumnName(p);
+                var paramterName = GetNewParamter();
+                var sql = $"{fieldName}={paramterName}";
+                SetFieldBuilder.Append(SetFieldBuilder.Length > 0 ? $",{sql}" : $" SET {sql}");
+                SetParamter(paramterName, p.GetValue(entity, null));
+            }
+        }
         public UpdateBuilder<T> Where(Expression<Func<T, bool>> expression)
         {
             var sql = _sqlTranslator.VisitExpression(expression);

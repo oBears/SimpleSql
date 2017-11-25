@@ -14,14 +14,15 @@ namespace SimpleSql.Query
         private readonly SqlTranslator<T> _sqlTranslator;
         private readonly SqlBuilder _sqlBuilder;
         private readonly IDbConnection _conn;
+        public Type Type { private set; get; }
         public QueryOver(IDbConnection conn)
         {
-            var type = typeof(T);
+            Type = typeof(T);
             _sqlTranslator = new SqlTranslator<T>();
-            _sqlBuilder = _sqlBuilder = new SqlBuilder()
+            _sqlBuilder = new SqlBuilder()
             {
-                TableName = DefaultResolver.ResolveTableName(type),
-                DefaultColumns = DefaultResolver.ResolveColumnNames(type)
+                TableName = DefaultResolver.ResolveTableName(Type),
+                DefaultColumns = DefaultResolver.ResolveColumnNames(Type)
             };
             _conn = conn;
         }
@@ -92,9 +93,25 @@ namespace SimpleSql.Query
         {
             return _conn.Query<T>(_sqlBuilder.BasicSQL, GetParameters()).ToList();
         }
+
+        public PageInfo<T> ToPageList()
+        {
+            var pageInfo =new PageInfo<T>();
+            pageInfo.Items = _conn.Query<T>(_sqlBuilder.BasicSQL, GetParameters()).ToList();
+            pageInfo.Count = _conn.ExecuteScalar<int>(_sqlBuilder.CountSQL, GetParameters());
+            return pageInfo;
+        }
         public T FirstOrDefault(Expression<Func<T, bool>> expression)
         {
             return this.Where(expression).Take(1).ToList().FirstOrDefault();
+        }
+        public T Get(object id)
+        {
+            var keyCol = DefaultResolver.ResolveKey(Type);
+            var paramName = _sqlTranslator.ParamIndex;
+            _sqlBuilder.AppendAnd($"{keyCol.ColumnName}={paramName}");
+            _sqlTranslator.Params.Add(paramName, id);
+            return this.Take(1).ToList().FirstOrDefault();
         }
 
         private DynamicParameters GetParameters()

@@ -20,7 +20,7 @@ namespace SimpleSql.Test
 
         private IDbConnection GetConn()
         {
-            return new MySqlConnection("server=127.0.0.1;uid=root;pwd=1234;database=test");
+            return new MySqlConnection("server=127.0.0.1;uid=root;pwd=mysql@123;database=test");
         }
         [Fact]
         public void Test_Delete()
@@ -49,7 +49,7 @@ namespace SimpleSql.Test
                         Age = ages[i % 10],
                         Birth = DateTime.Now
                     };
-                    conn.Insert(stu).Execute();
+                    conn.Insert(stu);
                 }
                 var count = conn.ExecuteScalar<int>("select count(1) from student");
                 Assert.Equal(count, 1000);

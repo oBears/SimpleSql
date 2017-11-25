@@ -27,7 +27,7 @@ namespace SimpleSql.Abstract
                     conn.Open();
                 HasSystemTablePermissions = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 HasSystemTablePermissions = false;
             }

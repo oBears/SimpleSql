@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleSql.Demo.Models;
 using System.Data;
+using SimpleSql.Query;
 
 namespace SimpleSql.Demo.Controllers
 {
@@ -27,13 +28,12 @@ namespace SimpleSql.Demo.Controllers
         [HttpPost]
         public void Create(User user)
         {
-            conn.Insert(user).Execute();
+            conn.Insert(user);
         }
-
         [HttpGet]
-        public List<User> GetList()
+        public PageInfo<User> GetList()
         {
-            return conn.CreateQuery<User>().ToList();
+            return conn.CreateQuery<User>().ToPageList();
         }
     }
 }

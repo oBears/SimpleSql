@@ -70,5 +70,12 @@ namespace SimpleSql.Entity
         {
             return GetDbTable(type).DbColumns;
         }
+        public static DbColumn ResolveKey(Type type)
+        {
+            var keyCol= GetDbTable(type).DbColumns.FirstOrDefault(x => x.Key);
+            if (keyCol == null)
+                throw new Exception($"类{type.Name}没有设置主键");
+            return keyCol;
+        }
     }
 }

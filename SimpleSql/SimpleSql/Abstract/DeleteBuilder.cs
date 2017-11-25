@@ -15,6 +15,13 @@ namespace SimpleSql.Abstract
         {
 
         }
+        public DeleteBuilder(IDbConnection conn, object id) : base(conn)
+        {
+            var keyCol = DefaultResolver.ResolveKey(typeof(T));
+            var paramName = _sqlTranslator.ParamIndex;
+            _sqlTranslator.Params.Add(paramName, id);
+            WhereBuilder.Append($" WHERE {keyCol.ColumnName}={paramName}");
+        }
         public DeleteBuilder<T> Where(Expression<Func<T, bool>> expression)
         {
             var sql = _sqlTranslator.VisitExpression(expression);

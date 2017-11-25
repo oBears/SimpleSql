@@ -10,8 +10,11 @@
     <PackageProjectUrl>https://github.com/oBears/SimpleSql</PackageProjectUrl>
     <Copyright>Tibbers</Copyright>
     <PackageId>SimpleSql-Core</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageReleaseNotes>1.增加分页查询
+2.增加按主键删除
+3.增加整体修改</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="MySqlConnector" Version="0.30.0" />
   </ItemGroup>
 
