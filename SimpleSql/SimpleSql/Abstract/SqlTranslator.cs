@@ -6,6 +6,7 @@ using SimpleSql.Query;
 using System.Reflection;
 using SimpleSql.Infrastructure;
 using SimpleSql.Entity;
+using System.Collections;
 
 namespace SimpleSql.Abstract
 {
@@ -46,10 +47,11 @@ namespace SimpleSql.Abstract
                     throw new NotImplementedException($"不支持类型{expression.NodeType.ToString()}");
             }
         }
+
         public string VisitBinary(BinaryExpression expression)
         {
             //节点类型是字段或属性
-            if (expression.Left.NodeType == ExpressionType.MemberAccess||expression.Left.NodeType== ExpressionType.Convert)
+            if (expression.Left.NodeType == ExpressionType.MemberAccess || expression.Left.NodeType == ExpressionType.Convert)
             {
                 var op = string.Empty;
                 switch (expression.NodeType)
@@ -117,41 +119,37 @@ namespace SimpleSql.Abstract
                             default:
                                 break;
                         }
-                        return $" {fKey} like @{p}";
+                        return $" {fKey} like {p}";
                     }
                 case "In":
                     {
                         var fKey = VisitMemberAccess((MemberExpression)args[0]);
-                        var fval = VisitNewArrayInit((NewArrayExpression)args[1]);
-                        if (fval.Length > 0)
+                        var fval = ExpressionHelper.GetEnumerableValue(args[1]);
+                        if (fval == null)
+                            return string.Empty;
+                        var inParams = new StringBuilder();
+                        foreach (var item in fval)
                         {
-                            var inParams = new StringBuilder();
-                            foreach (var item in fval)
-                            {
-                                var p = ParamIndex;
-                                Params.Add(p, fval);
-                                inParams.Append($"@{p},");
-                            }
-                            return $" {fKey} in ({inParams.ToString().TrimEnd(',')})";
+                            var p = ParamIndex;
+                            Params.Add(p, item);
+                            inParams.Append($"{p},");
                         }
-                        return string.Empty;
+                        return $" {fKey} in ({inParams.ToString().TrimEnd(',')})";
                     }
                 case "NotIn":
                     {
                         var fKey = VisitMemberAccess((MemberExpression)args[0]);
-                        var fval = VisitNewArrayInit((NewArrayExpression)args[1]);
-                        if (fval.Length > 0)
+                        var fval = ExpressionHelper.GetEnumerableValue(args[1]);
+                        if (fval == null)
+                            return string.Empty;
+                        var inParams = new StringBuilder();
+                        foreach (var item in fval)
                         {
-                            var inParams = new StringBuilder();
-                            foreach (var item in fval)
-                            {
-                                var p = ParamIndex;
-                                Params.Add(p, fval);
-                                inParams.Append($"@{p},");
-                            }
-                            return $" {fKey} not in ({inParams.ToString().TrimEnd(',')})";
+                            var p = ParamIndex;
+                            Params.Add(p, item);
+                            inParams.Append($"{p},");
                         }
-                        return string.Empty;
+                        return $" {fKey} not in ({inParams.ToString().TrimEnd(',')})";
                     }
                 default:
                     throw new NotImplementedException($"不支持方法{methodName}");
@@ -178,10 +176,6 @@ namespace SimpleSql.Abstract
             }
             return builder.ToString().TrimEnd(',');
         }
-        public object[] VisitNewArrayInit(NewArrayExpression expression)
-        {
-            var val = Expression.Lambda<Func<object[]>>(expression).Compile()();
-            return val;
-        }
+     
     }
 }

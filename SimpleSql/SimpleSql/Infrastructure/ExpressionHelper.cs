@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Linq.Expressions;
 using System.Linq;
-
+using System.Collections;
 
 namespace SimpleSql.Infrastructure
 {
@@ -25,5 +25,9 @@ namespace SimpleSql.Infrastructure
         }
         private static object VisitConstant(ConstantExpression expression) => expression.Value;
 
+        public static IEnumerable GetEnumerableValue(Expression expression)
+        {
+            return Expression.Lambda<Func<IEnumerable>>(expression).Compile()();
+        }
     }
 }

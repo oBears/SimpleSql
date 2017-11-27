@@ -35,5 +35,14 @@ namespace SimpleSql.Demo.Controllers
         {
             return conn.CreateQuery<User>().ToPageList();
         }
+        [HttpGet,Route("GetListByIds")]
+        public List<User> GetListByIds()
+        {
+            var ids = new int[] { 1, 2, 3 };
+            var list = conn.CreateQuery<User>()
+                .Where(x => x.Id.In(ids))
+                .ToList();
+            return list;
+        }
     }
 }
