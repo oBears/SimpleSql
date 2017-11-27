@@ -10,9 +10,9 @@
     <PackageProjectUrl>https://github.com/oBears/SimpleSql</PackageProjectUrl>
     <Copyright>Tibbers</Copyright>
     <PackageId>SimpleSql-Core</PackageId>
-    <Version>1.0.4.1</Version>
+    <Version>1.0.4.2</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageReleaseNotes>1.增加插入返回id</PackageReleaseNotes>
+    <PackageReleaseNotes>1.修复in查询</PackageReleaseNotes>
     <AssemblyVersion>1.0.4.1</AssemblyVersion>
     <FileVersion>1.0.4.1</FileVersion>
   </PropertyGroup>
