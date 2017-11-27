@@ -97,7 +97,19 @@ namespace SimpleSql
                             var val = reader.GetValue(i);
                             if (val is DBNull)
                                 continue;
-                            p.SetValue(obj, val);
+                            if (p.PropertyType == typeof(Boolean))
+                            {
+                                p.SetValue(obj, Convert.ToInt32(val) == 1);
+                            }
+                            //else if (p.PropertyType.IsEnum)
+                            //{
+
+                            //}
+                            else
+                            {
+                                p.SetValue(obj, val);
+                            }
+
                         }
                     }
                     yield return obj;

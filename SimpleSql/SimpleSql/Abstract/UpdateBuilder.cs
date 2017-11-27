@@ -15,9 +15,9 @@ namespace SimpleSql.Abstract
         {
 
         }
-        public UpdateBuilder(IDbConnection conn,T entity) : base(conn)
+        public UpdateBuilder(IDbConnection conn, T entity) : base(conn)
         {
-            var properties = DefaultResolver.ResolveProperties(type, false);
+            var properties = DefaultResolver.ResolveProperties(type, true);
             foreach (var p in properties)
             {
                 var fieldName = DefaultResolver.ResolveColumnName(p);
@@ -26,6 +26,7 @@ namespace SimpleSql.Abstract
                 SetFieldBuilder.Append(SetFieldBuilder.Length > 0 ? $",{sql}" : $" SET {sql}");
                 SetParamter(paramterName, p.GetValue(entity, null));
             }
+            AppendKeyWhere(entity);
         }
         public UpdateBuilder<T> Where(Expression<Func<T, bool>> expression)
         {
@@ -43,6 +44,14 @@ namespace SimpleSql.Abstract
         {
             var sql = $"UPDATE {TableName}  {SetFieldBuilder.ToString()} {WhereBuilder.ToString()}";
             return _conn.Execute(sql, GetParamters());
+        }
+        private void AppendKeyWhere(T entity)
+        {
+            var col = DefaultResolver.ResolveKey(type);
+            var paramName = GetNewParamter();
+            var sql = $"{col.ColumnName}={paramName}";
+            SetParamter(paramName, col.PropertyInfo.GetValue(entity, null));
+            WhereBuilder.Append(WhereBuilder.Length > 0 ? $" AND {sql}" : $" WHERE {sql}");
         }
     }
 
