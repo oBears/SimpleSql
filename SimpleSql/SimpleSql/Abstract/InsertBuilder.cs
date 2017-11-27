@@ -28,6 +28,11 @@ namespace SimpleSql.Abstract
             var sql = $"INSERT INTO {TableName}({FieldBuilder.ToString()})VALUES({ValueBuilder.ToString()})";
             return _conn.Execute(sql, GetParamters());
         }
+        public object ExecuteAndGetId()
+        {
+            var sql = $"INSERT INTO {TableName}({FieldBuilder.ToString()})VALUES({ValueBuilder.ToString()});select @@IDENTITY";
+            return _conn.ExecuteScalar<object>(sql, GetParamters());
+        }
 
     }
 }

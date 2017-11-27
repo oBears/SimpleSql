@@ -40,5 +40,9 @@ namespace SimpleSql
         {
             return new UpdateBuilder<T>(conn, entity).Execute();
         }
+        public static object InsertAndGetId<T>(this IDbConnection conn, T entity)
+        {
+            return new InsertBuilder<T>(conn, entity).ExecuteAndGetId();
+        }
     }
 }
