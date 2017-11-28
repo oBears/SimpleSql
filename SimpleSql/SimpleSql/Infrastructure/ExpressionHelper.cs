@@ -21,7 +21,18 @@ namespace SimpleSql.Infrastructure
         {
             if (expression.NodeType == ExpressionType.Constant)
                 return VisitConstant((ConstantExpression)expression);
-            return Expression.Lambda<Func<object>>(expression).Compile()();
+            if (expression.Type == typeof(int))
+                return Expression.Lambda<Func<int>>(expression).Compile()();
+            else if (expression.Type == typeof(string))
+                return Expression.Lambda<Func<string>>(expression).Compile()();
+            else if (expression.Type == typeof(double))
+                return Expression.Lambda<Func<double>>(expression).Compile()();
+            else if (expression.Type == typeof(decimal))
+                return Expression.Lambda<Func<decimal>>(expression).Compile()();
+            else if (expression.Type == typeof(DateTime))
+                return Expression.Lambda<Func<DateTime>>(expression).Compile()();
+            else
+                return Expression.Lambda<Func<object>>(expression).Compile()();
         }
         private static object VisitConstant(ConstantExpression expression) => expression.Value;
 

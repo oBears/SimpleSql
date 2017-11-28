@@ -93,6 +93,10 @@ namespace SimpleSql.Query
         {
             return _conn.Query<T>(_sqlBuilder.BasicSQL, GetParameters()).ToList();
         }
+        public List<TResult> ToList<TResult>()
+        {
+            return _conn.Query<TResult>(_sqlBuilder.BasicSQL, GetParameters()).ToList();
+        }
 
         public PageInfo<T> ToPageList()
         {
@@ -104,6 +108,11 @@ namespace SimpleSql.Query
         public T FirstOrDefault(Expression<Func<T, bool>> expression)
         {
             return this.Where(expression).Take(1).ToList().FirstOrDefault();
+        }
+        public TResult FirstOrDefault<TResult>()
+        {
+            return this.Take(1).ToList<TResult>().FirstOrDefault();
+
         }
         public T Get(object id)
         {
