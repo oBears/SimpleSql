@@ -84,7 +84,7 @@ namespace SimpleSql
             while (reader.Read() && reader.FieldCount != 0)
             {
                 //TODO Emit优化反射部分
-                if (type.IsClass)
+                if (type.IsClass&&type!=typeof(string))
                 {
                     var props = type.GetProperties();
                     var obj = Activator.CreateInstance<T>();
