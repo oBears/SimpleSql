@@ -6,7 +6,7 @@ using System.Globalization;
 using SimpleSql.Infrastructure;
 using SimpleSql.Abstract;
 using System.Linq;
-
+using SimpleSql.Entity;
 
 namespace SimpleSql
 {
@@ -43,6 +43,21 @@ namespace SimpleSql
         public static object InsertAndGetId<T>(this IDbConnection conn, T entity)
         {
             return new InsertBuilder<T>(conn, entity).ExecuteAndGetId();
+        }
+        public static void Save<T>(this IDbConnection conn, T entity)
+        {
+            var property = DefaultResolver.ResolveKeyProperty(typeof(T), out var increment);
+            var value = property.GetValue(entity, null);
+            if (property.PropertyType == typeof(int))
+            {
+                if (Convert.ToInt32(value) > 0)
+                    Update(conn, entity);
+                else
+                    Insert(conn, entity);
+                return;
+            }
+            throw new Exception($"{property.PropertyType.ToString()}不支持的主键类型");
+
         }
     }
 }
