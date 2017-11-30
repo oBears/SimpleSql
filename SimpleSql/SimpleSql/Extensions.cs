@@ -44,7 +44,7 @@ namespace SimpleSql
         {
             return new InsertBuilder<T>(conn, entity).ExecuteAndGetId();
         }
-        public static void Save<T>(this IDbConnection conn, T entity)
+        public static object Save<T>(this IDbConnection conn, T entity)
         {
             var property = DefaultResolver.ResolveKeyProperty(typeof(T), out var increment);
             var value = property.GetValue(entity, null);
@@ -53,8 +53,8 @@ namespace SimpleSql
                 if (Convert.ToInt32(value) > 0)
                     Update(conn, entity);
                 else
-                    Insert(conn, entity);
-                return;
+                    value= InsertAndGetId(conn, entity);
+                return value;
             }
             throw new Exception($"{property.PropertyType.ToString()}不支持的主键类型");
 
